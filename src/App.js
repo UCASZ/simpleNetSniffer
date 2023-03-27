@@ -50,14 +50,24 @@ function ProtocolRow({Protocol}) {
 
 function ProtocolTable({Protocols, filterText}) {
     const rows = []
-    let x = "@#@"
+    const arr = filterText.split(";");
+    const protocol = arr[0] === undefined? "": arr[0]
+    const dstAddr = arr[1] === undefined? "": arr[1]
+    const srcAddr = arr[2] === undefined? "": arr[2]
+    const dstPort = arr[3] === undefined? "": arr[3]
+    const srcPort = arr[4] === undefined? "": arr[4]
 
     Protocols.forEach((Protocol) => {
-        let sum = Protocol.protocalName + x + Protocol.dstAddr + x + Protocol.srcAddr + x + Protocol.dstPort + x +Protocol.srcPort
+        if (Protocol.dstPort === undefined || Protocol.srcPort === undefined) {
+            Protocol.dstPort = ""
+            Protocol.srcPort = ""
+        }
         if (
-            sum.toLowerCase().indexOf(
-                filterText.toLowerCase()
-            ) === -1
+            Protocol.protocalName.toLowerCase().indexOf(protocol.toLowerCase()) === -1 ||
+            Protocol.dstAddr.toLowerCase().indexOf(dstAddr.toLowerCase()) === -1 ||
+            Protocol.srcAddr.toLowerCase().indexOf(srcAddr.toLowerCase()) === -1 ||
+            Protocol.dstPort.toString().toLowerCase().indexOf(dstPort.toLowerCase()) === -1 ||
+            Protocol.srcPort.toString().toLowerCase().indexOf(srcPort.toLowerCase()) === -1
         ) {
             return
         }
@@ -91,11 +101,11 @@ function SearchBar({
                    }) {
     return (
         <form className="search-box">
-            <input
-                type="text"
-                value={filterText} placeholder="搜索（输入后置空则手动更新抓取情况）"
-                className="form-control"
-                onChange={(e) => onFilterTextChange(e.target.value)}/>
+                <input
+                    type="text"
+                    value={filterText} placeholder="search... (Example: TCP;192.168.8.1;127.0.0.1;80;8000)"
+                    className="form-control"
+                    onChange={(e) => onFilterTextChange(e.target.value)}/>
         </form>
     )
 }

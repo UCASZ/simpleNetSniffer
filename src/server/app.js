@@ -52,6 +52,12 @@ app.post('/listening', (req, res) => {
             data = tcp.data
         } else {
             protocalName = ip.constructor.name
+            if (ip.target_pa.addr === undefined) {
+                ip.target_pa.addr = ""
+            }
+            if (ip.sender_pa.addr === undefined) {
+                ip.sender_pa.addr = ""
+            }
             dstAddr = (ip.target_pa.addr + "").replaceAll(',', '.')
             srcAddr = (ip.sender_pa.addr + "").replaceAll(',', '.')
             data = undefined
